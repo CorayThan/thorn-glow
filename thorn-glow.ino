@@ -201,12 +201,15 @@ void loop() {
 
       int speed;
       int speedRand = random(100);
-      if (speedRand < 15) {
+      if (speedRand < 5) {
+        // Quick glow
+        speed = random(8, 15);
+      } else if (speedRand < 30) {
         // Medium glow
-        speed = random(10, 15);
+        speed = random(16, 30);
       } else {
         // Long glow
-        speed = random(16, 60);
+        speed = random(31, 60);
       }
 
       updateGlow->speed = speed;

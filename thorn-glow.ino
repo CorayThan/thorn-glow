@@ -108,29 +108,7 @@ void printGlow(Glow* glow) {
 
 bool validGlow(int testGlowStart, int testGlowSize) {
 
-  for (int idx = 0; idx < MAX_GLOWS; idx++) {
-    Glow* glow = &activeGlows[idx];
-    // Serial.print("Found glow at index ");
-    // Serial.println(idx);
-    // printGlow(glow);
-    if (glow->active) {
-      int activeGlowStart = glow->startIdx;
-      int activeGlowEnd = glow->startIdx + glow->size - 1;
-
-      int testGlowEnd = testGlowStart + testGlowSize - 1;
-      if ((testGlowStart >= activeGlowStart && testGlowStart <= activeGlowEnd) ||
-        (testGlowEnd >= activeGlowStart && testGlowEnd <= activeGlowEnd)) {
-
-        // Serial.print("Glow is invalid. Found glow with start ");
-        // Serial.print(activeGlowStart);
-        // Serial.print(" and end ");
-        // Serial.print(activeGlowEnd);
-        // Serial.println("");
-
-        return false;
-      }
-    }
-  }
+  
 
   // Serial.println("Glow is valid.");
   return true;
@@ -174,10 +152,10 @@ void loop() {
     int glowSize;
 
     int sizeRand = random(100);
-    if (sizeRand < 10) {
+    if (sizeRand < 20) {
       // Short glow
       glowSize = random(7, 12);
-    } else if (sizeRand < 40) {
+    } else if (sizeRand < 60) {
       // Medium glow
       glowSize = random(12, 16);
     } else {
@@ -185,11 +163,48 @@ void loop() {
       glowSize = random(17, 24);
     }
 
-    int glowStart = random(0, NUM_LEDS - glowSize);
+    int glowStart = random(0, NUM_LEDS - glowSize + 1);
 
-    int glowChance = random(100);
+    bool glowValid = true;
 
-    if (glowChance < 20 && validGlow(glowStart, glowSize)) {
+    // Serial.println("Potential glow start: ");
+    // Serial.print(glowStart);
+    // Serial.print(" and size ");
+    // Serial.println(glowSize);
+
+    // Check if glow is valid
+    for (int idx = 0; idx < MAX_GLOWS && glowValid; idx++) {
+      Glow* glow = &activeGlows[idx];
+
+      if (glow->active) {
+        int activeGlowStart = glow->startIdx;
+        int activeGlowEnd = glow->startIdx + glow->size - 1;
+
+        int testGlowEnd = glowStart + glowSize - 1;
+
+        if (
+          // potential glow start overlaps existing glow
+          (glowStart >= activeGlowStart && glowStart <= activeGlowEnd) ||
+          // potential glow end overlaps existing glow
+          (testGlowEnd >= activeGlowStart && testGlowEnd <= activeGlowEnd) ||
+          // Glows are equal or potential glow contains active glow
+          (glowStart <= activeGlowStart && testGlowEnd >= activeGlowEnd) ||
+          // Glows are equal or active glow contains potential glow
+          (activeGlowStart <= glowStart && activeGlowEnd >= testGlowEnd) 
+          ) {
+
+          glowValid = false;
+        } else {
+          // Glows do not overlap
+          // Serial.print("Non overlapping glow start: ");
+          // Serial.print(activeGlowStart);
+          // Serial.print(" and end ");
+          // Serial.println(activeGlowEnd);
+        }
+      }
+    }
+    
+    if (glowValid) {
       // Serial.println("Glow is valid let's really make it!");
       // Serial.print("Potential glow was valid add a glow at glow index: ");
       // Serial.println(emptyGlowIdx);
@@ -201,15 +216,15 @@ void loop() {
 
       int speed;
       int speedRand = random(100);
-      if (speedRand < 5) {
+      if (speedRand < 10) {
         // Quick glow
-        speed = random(8, 15);
-      } else if (speedRand < 30) {
+        speed = random(1, 3);
+      } else if (speedRand < 40) {
         // Medium glow
-        speed = random(16, 30);
+        speed = random(4, 30);
       } else {
-        // Long glow
-        speed = random(31, 60);
+        // Slow glow
+        speed = random(31, 199);
       }
 
       updateGlow->speed = speed;
@@ -239,14 +254,14 @@ void loop() {
         if (glow->increment) {
           // Increase glow
           // Serial.println("Increment intensity.");
-          glow->currentIntensity += 1;
+          glow->currentIntensity++;
           if (glow->currentIntensity >= glow->maxIntensity) {
             glow->increment = false;
           }
         } else if (glow->currentIntensity > 0) {
           // Decrease glow
           // Serial.println("Decrement intensity.");
-          glow->currentIntensity -= 1;
+          glow->currentIntensity--;
         } else {
           // Glow now inactive
           // Serial.println("Glow inactive.");
@@ -291,5 +306,5 @@ void loop() {
   }
 
   FastLED.show();
-  delay(5);
+  delay(4);
 }

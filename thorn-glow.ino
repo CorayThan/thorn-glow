@@ -125,7 +125,7 @@ void setup() {
 
 void loop() { 
 
-  int colorCount = 8;
+  int colorCount = 7;
 
   // Blues
   // CHSV chsvColors[colorCount] = {
@@ -137,17 +137,28 @@ void loop() {
   //   CHSV(180, 255, 255), // Violet
   // };
 
-  // Pink Purple
+  // Purples
   CHSV chsvColors[colorCount] = {
-    CHSV(245, 255, 255), // Almost Red
-    CHSV(240, 255, 255), // Red Pink
-    CHSV(240, 200, 255), // Light Red Pink
-    CHSV(230, 255, 255), // Pink
-    CHSV(230, 200, 255), // Light Pink
-    CHSV(225, 255, 255), // Purple Pink
-    CHSV(215, 255, 255), // Light Pink
-    CHSV(210, 255, 255), // Purple Pink
+    CHSV(235, 255, 255), // Red Pink
+    CHSV(220, 255, 255), // Purple Pink
+    CHSV(210, 255, 255), // Mostly Purple
+    CHSV(205, 255, 150), // Light Purple
+    CHSV(205, 255, 200), // Purple
+    CHSV(201, 200, 150), // Amethyst
+    CHSV(185, 255, 200), // Violet
   };
+
+  // Pink Purple
+  // CHSV chsvColors[colorCount] = {
+  //   CHSV(245, 255, 255), // Almost Red
+  //   CHSV(240, 255, 255), // Red Pink
+  //   CHSV(240, 200, 255), // Light Red Pink
+  //   CHSV(230, 255, 255), // Pink
+  //   CHSV(230, 200, 255), // Light Pink
+  //   CHSV(225, 255, 255), // Purple Pink
+  //   CHSV(215, 255, 255), // Light Pink
+  //   CHSV(210, 255, 255), // Purple Pink
+  // };
 
     // Pink Orange
   // CHSV chsvColors[colorCount] = {

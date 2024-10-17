@@ -4,6 +4,8 @@
 
 #include <FastLED.h>
 
+// When hooking up the Arduino, ensure you're using a power + data cable. The short one is power only!
+
 // How many leds in your strip?
 #define NUM_LEDS 48
 
@@ -118,19 +120,44 @@ void setup() {
   Serial.begin(9600);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   randomSeed(analogRead(0));
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(75);
 }
 
 void loop() { 
 
-  CHSV chsvColors[6] = {
-    CHSV(140, 255, 255), // Aqua
-    CHSV(155, 150, 255), // Sky
-    CHSV(160, 255, 255), // Blue
-    CHSV(165, 200, 255), // Faded Blue
-    CHSV(175, 150, 255), // Amethyst
-    CHSV(180, 255, 255), // Violet
+  int colorCount = 8;
+
+  // Blues
+  // CHSV chsvColors[colorCount] = {
+  //   CHSV(140, 255, 255), // Aqua
+  //   CHSV(155, 150, 255), // Sky
+  //   CHSV(160, 255, 255), // Blue
+  //   CHSV(165, 200, 255), // Faded Blue
+  //   CHSV(175, 150, 255), // Amethyst
+  //   CHSV(180, 255, 255), // Violet
+  // };
+
+  // Pink Purple
+  CHSV chsvColors[colorCount] = {
+    CHSV(245, 255, 255), // Almost Red
+    CHSV(240, 255, 255), // Red Pink
+    CHSV(240, 200, 255), // Light Red Pink
+    CHSV(230, 255, 255), // Pink
+    CHSV(230, 200, 255), // Light Pink
+    CHSV(225, 255, 255), // Purple Pink
+    CHSV(215, 255, 255), // Light Pink
+    CHSV(210, 255, 255), // Purple Pink
   };
+
+    // Pink Orange
+  // CHSV chsvColors[colorCount] = {
+  //   CHSV(230, 255, 255), // Pink
+  //   CHSV(230, 200, 255), // Light Pink
+  //   CHSV(240, 255, 255), // Red Pink
+  //   CHSV(240, 200, 255), // Light Red Pink
+  //   CHSV(20, 255, 255), // Orange
+  //   CHSV(10, 225, 255), // Light Orange Red
+  // };
 
   int currentActiveGlows = 0;
   int emptyGlowIdx = -1;
@@ -210,21 +237,21 @@ void loop() {
       // Serial.println(emptyGlowIdx);
       Glow* updateGlow = &activeGlows[emptyGlowIdx];
       updateGlow->active = true;
-      updateGlow->color = chsvColors[random(6)];
+      updateGlow->color = chsvColors[random(colorCount)];
       updateGlow->startIdx = glowStart;
       updateGlow->size = glowSize;
 
       int speed;
       int speedRand = random(100);
-      if (speedRand < 10) {
-        // Quick glow
+      if (speedRand < 20) {
+        // Slow glow
         speed = random(1, 3);
-      } else if (speedRand < 40) {
+      } else if (speedRand < 60) {
         // Medium glow
         speed = random(4, 30);
       } else {
-        // Slow glow
-        speed = random(31, 199);
+        // Fast glow
+        speed = random(31, 175);
       }
 
       updateGlow->speed = speed;
